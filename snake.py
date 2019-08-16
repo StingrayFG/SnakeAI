@@ -103,7 +103,7 @@ res_syn2 = []
 
 best_score = 0
 
-mutation_rate = 5.0
+mutation_rate = 10.0
 
 l0 = np.empty([1, 24])
 
@@ -254,7 +254,7 @@ l1 = relu(np.dot(l0, syn0))
 l2 = relu(np.dot(l1, syn1))
 l3 = relu(np.dot(l2, syn2))
 
-num_of_iterations = 4000
+num_of_iterations = 2000
 saved_iteration = [0]
 iteration = 0
 iterations = []
@@ -601,13 +601,12 @@ while run:
                 if pos[0][0] <= 328 or pos[0][0] >= 952 or pos[0][1] <= -8 or pos[0][1] >= 648:
                     living = False
 
-            if score < 10:
+            if local_score < 10:
                 fitness = int(local_life_time * local_life_time) * exponential(2, local_score)
             else:
-                fitness = 10000 * local_score * local_score * local_life_time
-
-            if high_score > 18:
-                fitness = int(square(fitness))
+                fitness = int(local_life_time * local_life_time)
+                fitness *= exponential(2, 10)
+                fitness *= (local_score - 9)
 
             '''
             if fitness >= best_score:
@@ -708,8 +707,6 @@ while run:
 
         direction = 'u'
         moving = 'u'
-
-        print(iterations[0][0])
 
         ate_fruit = False
 
