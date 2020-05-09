@@ -194,7 +194,7 @@ def poses(pos, fr, syn3):
     w.close()
 
 
-def u_loading(syn0, syn1, syn2, fr_pos, length):
+def u_loading(syn0, syn1, syn2, fr_pos):
     f = open('save.txt', 'w')
     for a in range(24):
         for b in range(18):
@@ -207,8 +207,6 @@ def u_loading(syn0, syn1, syn2, fr_pos, length):
     for a in range(18):
         for b in range(4):
             f.write(str(syn2[a][b]) + '\n')
-
-    f.write(str(length) + '\n')
 
     for a in range(len(fr_pos)):
         for b in range(2):
@@ -254,7 +252,7 @@ l1 = relu(np.dot(l0, syn0))
 l2 = relu(np.dot(l1, syn1))
 l3 = relu(np.dot(l2, syn2))
 
-num_of_iterations = 2000
+num_of_iterations = 1000
 saved_iteration = [0]
 iteration = 0
 iterations = []
@@ -595,6 +593,9 @@ while run:
                 if moves <= 0:
                     living = False
 
+                if local_score >= 120:
+                    living = False
+
                 if not all(pos[0] != pos[i] for i in range(1, len(pos))):
                     living = False
 
@@ -602,9 +603,9 @@ while run:
                     living = False
 
             if local_score < 10:
-                fitness = int(local_life_time * local_life_time) * exponential(2, local_score)
+                fitness = local_life_time * local_life_time * exponential(2, local_score)
             else:
-                fitness = int(local_life_time * local_life_time)
+                fitness = local_life_time * local_life_time
                 fitness *= exponential(2, 10)
                 fitness *= (local_score - 9)
 
@@ -636,12 +637,6 @@ while run:
         # fruits_pos = for_display[4]
 
         ''' syn0, syn1, syn2, fruits_pos = d_loading() '''
-
-        if iterations[0][0] <= 80000 and generation == 1:
-            losing()
-            generation -= 1
-            first_gen = True
-            continue
 
         new_iterations = iterations[::-1]
 
